@@ -11,7 +11,24 @@
             </tr>
         </thead>
         <tbody>
-            <tr></tr>
+            @for (c of countries(); track c; let index = $index) {
+                <tr>
+                    <td>{{index + 1}}</td>
+                    <td>{{c.emoji}}</td>
+                    <td>
+                        <img [src]="c.flagSvg" [alt]="c.name"
+                            class="w-10"/>
+                    </td>
+                    <td>{{c.name}}</td>
+                    <td>{{c.capital}}</td>
+                    <td>
+                        <span class="badge badge-secondary">
+                            {{c.population | number}}
+                        </span>
+                    </td>
+                    <td><a class="link-primary cursor-pointer">More Info</a></td>
+                </tr>
+            }
         </tbody>
     </table>
 </section>

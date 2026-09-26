@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CountryList } from '../../components/country-list/country-list';
+import { Component } from '@angular/core';
+
 import { SearchInput } from '../../components/search-input/search-input';
 
 @Component({
   selector: 'app-by-country-page',
-  imports: [CountryList, SearchInput],
+  imports: [ SearchInput],
   templateUrl: './by-country-page.html'
 })
 export class ByCountryPage {
