@@ -26,7 +26,9 @@
                             {{c.population | number}}
                         </span>
                     </td>
-                    <td><a class="link-primary cursor-pointer">More Info</a></td>
+                    <td><a 
+                        [routerLink]="['/country/by', c.cca2]"
+                        class="link-primary cursor-pointer">More Info</a></td>
                 </tr>
             }
         </tbody>

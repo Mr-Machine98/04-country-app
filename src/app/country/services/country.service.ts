@@ -30,4 +30,20 @@ export class CountryService {
     );
   }
 
+  searchByCountry(query: string) {
+    query = query.toLowerCase();
+    return this.http.get<RESTCountryResponse>(
+      `${API_URL}/name`, { 
+        headers: { 'Authorization': 'Bearer rc_live_d7bd22e9443147b0ab74d71848d565cc' },
+        params: {'q': query}
+      }
+    ).pipe(
+      map(restCountry => CountryMapper.mapRestCountryArrayToCountryArray(restCountry.data.objects)),
+      catchError( error => {
+        console.error('Error fetching', error);
+        return throwError(() => new Error(`It could not get countries using that query: ${query}`));
+      })
+    );
+  }
+
 }
