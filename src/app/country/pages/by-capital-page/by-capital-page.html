@@ -1,10 +1,9 @@
 <country-search-input 
     (emitSearch)="query.set($event)"
     placeholder="Search by Capital"/>
-
-@if (capitalResource.error()) {
-    <h3>{{capitalResource.error()}}</h3>
-} 
-@if (capitalResource.hasValue()) {
-    <country-list [countries]="capitalResource.value()"/>
-}
+<country-list 
+    [countries]="capitalResource.value() ?? []"
+    [errorMessage]="capitalResource.error()"
+    [isEmpty]="capitalResource.value()?.length == 0"
+    [isLoading]="capitalResource.isLoading()"
+/>

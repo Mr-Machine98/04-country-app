@@ -15,6 +15,7 @@ export class ByCapitalPage {
   countryService = inject(CountryService);
 
   query = signal('');
+  
   // Este es un recurso de angular 20 para arriba, que nos permite hacer una especie de "state management" 
   // de manera más sencilla
   // y con menos código, ya que nos permite manejar el estado de una manera más declarativa y reactiva

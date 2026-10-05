@@ -1,1 +1,22 @@
-<p>country-page works!</p>,
+@if (countryResource.error()) {
+<section class="flex flex-col items-center justify-center mt-10">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="3em"
+    height="3em"
+    viewBox="0 0 24 24"
+  >
+    <path d="M0 0h24v24H0z" fill="none" />
+    <path fill="currentColor" d="M11 6h2v5h-2zm0 6h2v2h-2z" />
+    <path
+      fill="currentColor"
+      d="M20 2H4c-1.103 0-2 .897-2 2v18l5.333-4H20c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2m0 14H6.667L4 18V4h16z"
+    />
+  </svg>
+
+  <h1>Country Not Found</h1>
+  <a href="" class="link-primary cursor-pointer">Back</a>
+</section>
+} @if (countryResource.hasValue()) {
+<h1>Name: {{countryResource.value()!.name}}</h1>
+}
