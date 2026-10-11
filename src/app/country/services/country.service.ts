@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { RESTCountryResponse } from '../interfaces/rest-countries.interface';
-import { catchError, delay, map, Observable, of, throwError } from 'rxjs';
+import { catchError, delay, map, Observable, of, tap, throwError } from 'rxjs';
 import { Country } from '../interfaces/country.interface';
 import { CountryMapper } from '../mappers/country.mapper';
 
@@ -13,9 +13,17 @@ const API_URL = 'https://api.restcountries.com/countries/v5';
 export class CountryService {
 
   private http = inject(HttpClient);
+  // cache para el servicio de capital
+  private queryCacheCapital = new Map<string, Country[]>();
+  private queryCacheCountry = new Map<string, Country[]>();
 
   searchByCapital(query: string): Observable<Country[]> {
     query = query.toLowerCase();
+
+    if (this.queryCacheCapital.has(query)) {
+      return of(this.queryCacheCapital.get(query) ?? []);
+    }
+
     return this.http.get<RESTCountryResponse>(
       `${API_URL}/capitals`, { 
         headers: { 'Authorization': 'Bearer rc_live_d7bd22e9443147b0ab74d71848d565cc' },
@@ -23,6 +31,7 @@ export class CountryService {
       }
     ).pipe(
       map(restCountry => CountryMapper.mapRestCountryArrayToCountryArray(restCountry.data.objects)),
+      tap(countries => this.queryCacheCapital.set(query, countries)),
       catchError( error => {
         console.error('Error fetching', error);
         return throwError(() => new Error(`It could not get countries using that query: ${query}`));
@@ -32,6 +41,11 @@ export class CountryService {
 
   searchByCountry(query: string) {
     query = query.toLowerCase();
+    
+    if (this.queryCacheCountry.has(query)) {
+      return of(this.queryCacheCountry.get(query) ?? []);
+    }
+
     return this.http.get<RESTCountryResponse>(
       `${API_URL}/name`, { 
         headers: { 'Authorization': 'Bearer rc_live_d7bd22e9443147b0ab74d71848d565cc' },
@@ -39,6 +53,7 @@ export class CountryService {
       }
     ).pipe(
       map(restCountry => CountryMapper.mapRestCountryArrayToCountryArray(restCountry.data.objects)),
+      tap(countries => this.queryCacheCountry.set(query, countries)),
       delay(2000),
       catchError( error => {
         console.error('Error fetching', error);
