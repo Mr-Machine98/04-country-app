@@ -16,6 +16,27 @@ export class CountryService {
   // cache para el servicio de capital
   private queryCacheCapital = new Map<string, Country[]>();
   private queryCacheCountry = new Map<string, Country[]>();
+  private queryCacheRegion = new Map<string, Country[]>();
+
+  searchByRegion(query: string): Observable<Country[]> {
+    query = query.toLowerCase().trim();
+    if (this.queryCacheRegion.has(query)) {
+      return of(this.queryCacheRegion.get(query) ?? []);
+    }
+    return this.http.get<RESTCountryResponse>(
+      `${API_URL}`, { 
+        headers: { 'Authorization': 'Bearer rc_live_d7bd22e9443147b0ab74d71848d565cc' },
+        params: {'region': query}
+      }
+    ).pipe(
+      map(restCountry => CountryMapper.mapRestCountryArrayToCountryArray(restCountry.data.objects)),
+      tap(countries => this.queryCacheRegion.set(query, countries)),
+      catchError( error => {
+        console.error('Error fetching', error);
+        return throwError(() => new Error(`It could not get countries using that query: ${query}`));
+      })
+    );
+  }
 
   searchByCapital(query: string): Observable<Country[]> {
     query = query.toLowerCase();
