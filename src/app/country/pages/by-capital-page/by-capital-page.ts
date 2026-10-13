@@ -3,6 +3,7 @@ import { SearchInput } from '../../components/search-input/search-input';
 import { CountryList } from '../../components/country-list/country-list';
 import { CountryService } from '../../services/country.service';
 import { firstValueFrom } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-by-capital-page',
@@ -13,8 +14,10 @@ export class ByCapitalPage {
 
   
   countryService = inject(CountryService);
-
-  query = signal('');
+  activatedRoute = inject(ActivatedRoute); 
+  // Obtenemos el valor del query param 'query' de la URL, si no existe, usamos un string vacío
+  queryParam = this.activatedRoute.snapshot.queryParamMap.get('query') ?? '';
+  query = signal(this.queryParam);
   
   // Este es un recurso de angular 20 para arriba, que nos permite hacer una especie de "state management" 
   // de manera más sencilla
@@ -28,6 +31,7 @@ export class ByCapitalPage {
     // en este caso, el loader hace una llamada al servicio de país para buscar los países por capital
     loader: async({request}) => {
       // Si no hay query, devolvemos un array vacío
+      console.log('query', request.query);
       if (!request.query) return []; // Si no hay query, devolvemos un array vacío
       // Si hay query, hacemos la llamada al servicio de país para buscar los países por capital
       // Usamos firstValueFrom para convertir el observable que devuelve el servicio en una promesa

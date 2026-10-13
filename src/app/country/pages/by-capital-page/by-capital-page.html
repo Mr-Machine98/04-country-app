@@ -1,5 +1,6 @@
 <country-search-input 
     (emitSearch)="query.set($event)"
+    [initialValue]="query()"
     placeholder="Search by Capital"/>
 <country-list 
     [countries]="capitalResource.value() ?? []"

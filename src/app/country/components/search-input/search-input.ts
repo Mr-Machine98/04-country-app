@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, linkedSignal, output, signal } from '@angular/core';
 
 @Component({
   selector: 'country-search-input',
@@ -9,7 +9,8 @@ export class SearchInput {
   emitSearch = output<string>();
   placeholder = input('Search');
   debounceTime = input<number>(1000);
-  inputValue = signal<string>('');
+  initialValue = input<string>('');
+  inputValue = linkedSignal<string>(() => this.initialValue() ?? '');
 
   /*
   Este efecto se ejecuta cada vez que la señal inputValue cambia
