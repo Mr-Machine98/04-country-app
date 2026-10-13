@@ -1,5 +1,6 @@
 <country-search-input 
     placeholder="Search by Country"
+    [initialValue]="query()"
     (emitSearch)="this.query.set($event)"/>
 <country-list 
     [countries]="countryResource.value() ?? []"
